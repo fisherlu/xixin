@@ -1,0 +1,83 @@
+import "package:hive_flutter/hive_flutter.dart";
+
+class HiveService {
+  HiveService._();
+
+  static late Box _settingsBox;
+  static late Box _meditationBox;
+  static late Box _achievementsBox;
+
+  static Future<void> init() async {
+    _settingsBox = await Hive.openBox("settings");
+    _meditationBox = await Hive.openBox("meditation_history");
+    _achievementsBox = await Hive.openBox("achievements");
+  }
+
+  // ── Settings ──
+  static String get locale => _settingsBox.get("locale", defaultValue: "zh_CN");
+  static set locale(String v) => _settingsBox.put("locale", v);
+
+  static bool get reminderEnabled => _settingsBox.get("reminder", defaultValue: false);
+  static set reminderEnabled(bool v) => _settingsBox.put("reminder", v);
+
+  static String get reminderTime => _settingsBox.get("reminderTime", defaultValue: "08:00");
+  static set reminderTime(String v) => _settingsBox.put("reminderTime", v);
+
+  // ── Meditation History ──
+  static List<Map> get meditationHistory {
+    final raw = _meditationBox.get("sessions", defaultValue: <Map>[]);
+    return List<Map>.from(raw);
+  }
+
+  static Future<void> addMeditationSession(Map session) async {
+    final sessions = meditationHistory;
+    sessions.insert(0, session);
+    await _meditationBox.put("sessions", sessions);
+  }
+
+  static int get totalMinutes {
+    return meditationHistory.fold<int>(
+      0,
+      (sum, s) => sum + ((s["durationSeconds"] as int?) ?? 0),
+    ) ~/ 60;
+  }
+
+  static int get streakDays {
+    final sessions = meditationHistory;
+    if (sessions.isEmpty) return 0;
+    int streak = 0;
+    DateTime? lastDate;
+    for (final s in sessions) {
+      final dateStr = s["date"] as String?;
+      if (dateStr == null) continue;
+      final date = DateTime.tryParse(dateStr);
+      if (date == null) continue;
+      if (lastDate == null) {
+        streak = 1;
+        lastDate = date;
+        continue;
+      }
+      final diff = lastDate.difference(date).inDays;
+      if (diff == 1) {
+        streak++;
+        lastDate = date;
+      } else {
+        break;
+      }
+    }
+    return streak;
+  }
+
+  // ── Achievements ──
+  static bool hasAchievement(String id) =>
+      _achievementsBox.get(id, defaultValue: false);
+
+  static Future<void> unlockAchievement(String id) async {
+    await _achievementsBox.put(id, true);
+  }
+
+  static Set<String> get unlockedAchievements {
+    final keys = _achievementsBox.keys.cast<String>();
+    return keys.where((k) => _achievementsBox.get(k) == true).toSet();
+  }
+}
