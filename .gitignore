@@ -8,7 +8,7 @@ build/
 .flutter-plugins
 .flutter-plugins-dependencies
 .metadata
-*.lock
+# *.lock (except server)
 *.g.dart
 *.freezed.dart
 
@@ -36,3 +36,8 @@ Thumbs.db
 node_modules/
 package.json
 package-lock.json
+
+# Server data
+server/data/
+server/node_modules/
+server/.env
