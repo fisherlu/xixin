@@ -1,4 +1,4 @@
-﻿import "package:flutter/material.dart";
+import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import "../../core/router/app_router.dart";
 import "../../core/theme/app_colors.dart";
@@ -22,11 +22,15 @@ class HomePage extends StatelessWidget {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const SizedBox(height: 20),
             _greeting(context, home, theme),
-            const SizedBox(height: 32),
-            _quickStart(context),
-            const SizedBox(height: 32),
-            _dailyCard(context, recommended, theme),
             const SizedBox(height: 24),
+            _dailyQuote(theme),
+            const SizedBox(height: 28),
+            _statsRow(context, home, theme),
+            const SizedBox(height: 28),
+            _quickStart(context),
+            const SizedBox(height: 28),
+            _dailyCard(context, recommended, theme),
+            const SizedBox(height: 20),
             _categories(context, theme),
             const SizedBox(height: 32),
           ]),
@@ -50,6 +54,63 @@ class HomePage extends StatelessWidget {
         ]),
       ],
     ]);
+  }
+
+  Widget _dailyQuote(ThemeData t) {
+    final quotes = [
+      "呼吸是连接身体与心灵的桥梁。",
+      "你无法阻止波浪，但可以学会冲浪。",
+      "当下时刻，是唯一真正存在的时间。",
+      "平静不是没有风暴，而是在风暴中找到安宁。",
+      "觉察呼吸，就是回到当下。",
+    ];
+    final quote = quotes[DateTime.now().day % quotes.length];
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(
+          colors: [AppColors.primary.withValues(alpha: 0.08), AppColors.primaryLight.withValues(alpha: 0.04)],
+        ),
+      ),
+      child: Row(children: [
+        const Icon(Icons.format_quote, color: AppColors.primaryLight, size: 24),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(quote, style: t.textTheme.bodyLarge?.copyWith(color: AppColors.primaryDark, fontStyle: FontStyle.italic)),
+        ),
+      ]),
+    );
+  }
+
+  Widget _statsRow(BuildContext ctx, HomeProvider h, ThemeData t) {
+    return Row(children: [
+      _miniStat(t, "总时长", "${h.totalMinutes}分钟", Icons.timer, AppColors.primary),
+      const SizedBox(width: 12),
+      _miniStat(t, "冥想次数", "${h.totalSessions}次", Icons.self_improvement, const Color(0xFF52B788)),
+      const SizedBox(width: 12),
+      _miniStat(t, "连续天数", "${h.streakDays}天", Icons.local_fire_department, AppColors.accent),
+    ].map((w) => Expanded(child: w)).toList());
+  }
+
+  Widget _miniStat(ThemeData t, String label, String value, IconData icon, Color color) {
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, AppRouter.profile),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: t.cardColor,
+        ),
+        child: Column(children: [
+          Icon(icon, color: color, size: 22),
+          const SizedBox(height: 6),
+          Text(value, style: t.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+          Text(label, style: t.textTheme.bodySmall?.copyWith(color: AppColors.textSecondary)),
+        ]),
+      ),
+    );
   }
 
   Widget _quickStart(BuildContext ctx) {

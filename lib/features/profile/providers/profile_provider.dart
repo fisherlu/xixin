@@ -1,5 +1,6 @@
 import "package:flutter/foundation.dart";
 import "../../../core/storage/hive_service.dart";
+import "../../../core/notification/notification_service.dart";
 import "../../../shared/models/achievement.dart";
 
 class ProfileProvider extends ChangeNotifier {
@@ -20,10 +21,26 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   Future<void> toggleReminder(bool v) async {
-    HiveService.reminderEnabled = v; notifyListeners();
+    HiveService.reminderEnabled = v;
+    if (v) {
+      _scheduleReminder();
+    } else {
+      NotificationService.cancelAll();
+    }
+    notifyListeners();
   }
 
   Future<void> setReminderTime(String t) async {
-    HiveService.reminderTime = t; notifyListeners();
+    HiveService.reminderTime = t;
+    _scheduleReminder();
+    notifyListeners();
+  }
+
+  void _scheduleReminder() {
+    if (!HiveService.reminderEnabled) return;
+    final parts = HiveService.reminderTime.split(':');
+    final hour = int.tryParse(parts[0]) ?? 8;
+    final minute = int.tryParse(parts.length > 1 ? parts[1] : '0') ?? 0;
+    NotificationService.scheduleDailyReminder(hour, minute);
   }
 }

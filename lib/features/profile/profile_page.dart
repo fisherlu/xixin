@@ -1,8 +1,8 @@
-﻿import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../core/theme/app_colors.dart';
-import '../../shared/models/achievement.dart';
-import 'providers/profile_provider.dart';
+import "package:flutter/material.dart";
+import "package:provider/provider.dart";
+import "../../core/theme/app_colors.dart";
+import "../../shared/models/achievement.dart";
+import "providers/profile_provider.dart";
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -97,12 +97,32 @@ class ProfilePage extends StatelessWidget {
           subtitle: Text(pp.reminderEnabled ? '每天 ${pp.reminderTime}' : '关闭'),
           value: pp.reminderEnabled, onChanged: pp.toggleReminder,
         ),
+        if (pp.reminderEnabled) ...[
+          const Divider(height: 1),
+          ListTile(
+            title: const Text('提醒时间'),
+            trailing: GestureDetector(
+              onTap: () => _pickTime(ctx, pp),
+              child: Text(pp.reminderTime, style: t.textTheme.bodyLarge?.copyWith(color: AppColors.primary)),
+            ),
+          ),
+        ],
         const Divider(height: 1),
-        ListTile(title: const Text('关于正念冥想'), subtitle: const Text('v1.0.0'), trailing: const Icon(Icons.chevron_right), onTap: () {}),
+        ListTile(title: const Text('关于息心冥想'), subtitle: const Text('v1.0.0 — 中文原生正念伴侣'), trailing: const Icon(Icons.chevron_right), onTap: () {}),
         const Divider(height: 1),
         ListTile(title: const Text('隐私政策'), trailing: const Icon(Icons.chevron_right), onTap: () {}),
       ])),
     ]);
   }
-}
 
+  Future<void> _pickTime(BuildContext ctx, ProfileProvider pp) async {
+    final parts = pp.reminderTime.split(':');
+    final initial = TimeOfDay(hour: int.tryParse(parts[0]) ?? 8, minute: int.tryParse(parts.length > 1 ? parts[1] : '0') ?? 0);
+    final picked = await showTimePicker(context: ctx, initialTime: initial);
+    if (picked != null) {
+      final h = picked.hour.toString().padLeft(2, '0');
+      final m = picked.minute.toString().padLeft(2, '0');
+      pp.setReminderTime('$h:$m');
+    }
+  }
+}

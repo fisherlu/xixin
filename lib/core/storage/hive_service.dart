@@ -81,3 +81,7 @@ class HiveService {
     return keys.where((k) => _achievementsBox.get(k) == true).toSet();
   }
 }
+
+  // ── Onboarding ──
+  static bool get onboardingDone => _settingsBox.get("onboardingDone", defaultValue: false);
+  static set onboardingDone(bool v) => _settingsBox.put("onboardingDone", v);
