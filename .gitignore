@@ -32,3 +32,7 @@ ios/Flutter/Flutter.podspec
 Thumbs.db
 *.log
 *.tmp
+# Node.js TTS tools
+node_modules/
+package.json
+package-lock.json
