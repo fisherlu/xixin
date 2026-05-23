@@ -1,6 +1,7 @@
-﻿import "package:flutter/material.dart";
+import "package:flutter/material.dart";
 import "../../core/router/app_router.dart";
 import "../../core/theme/app_colors.dart";
+import "../../core/storage/hive_service.dart";
 import "../../shared/models/sleep_story.dart";
 import "../../shared/models/meditation.dart";
 
@@ -43,10 +44,25 @@ class SleepPage extends StatelessWidget {
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: const Color(0xFF1B4332)),
           child: const Icon(Icons.nightlight_round, color: Colors.white70),
         ),
-        title: Text(s.title, style: const TextStyle(fontWeight: FontWeight.w600)),
+        title: Row(children: [
+          Expanded(child: Text(s.title, style: const TextStyle(fontWeight: FontWeight.w600))),
+          if (s.isPremium)
+            Container(
+              margin: const EdgeInsets.only(left: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: AppColors.accent.withValues(alpha: 0.15)),
+              child: const Text('会员', style: TextStyle(color: AppColors.accent, fontSize: 10, fontWeight: FontWeight.w600)),
+            ),
+        ]),
         subtitle: Text("${s.narrator ?? ''}  ·  ${s.durationText}", style: const TextStyle(fontSize: 13)),
-        trailing: s.isPremium ? const Icon(Icons.star, color: AppColors.accent, size: 18) : null,
-        onTap: () => Navigator.pushNamed(context, AppRouter.sleepPlayer, arguments: s),
+        trailing: s.isPremium ? const Icon(Icons.lock, color: AppColors.accent, size: 16) : null,
+        onTap: () {
+          if (s.isPremium && !HiveService.isPremium) {
+            _showPremiumDialog(context, s.title);
+            return;
+          }
+          Navigator.pushNamed(context, AppRouter.sleepPlayer, arguments: s);
+        },
       ),
     );
   }
@@ -61,9 +77,48 @@ class SleepPage extends StatelessWidget {
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: AppColors.primary.withValues(alpha: 0.1)),
           child: const Icon(Icons.self_improvement, color: AppColors.primary),
         ),
-        title: Text(m.title, style: const TextStyle(fontWeight: FontWeight.w600)),
+        title: Row(children: [
+          Expanded(child: Text(m.title, style: const TextStyle(fontWeight: FontWeight.w600))),
+          if (m.isPremium)
+            Container(
+              margin: const EdgeInsets.only(left: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: AppColors.accent.withValues(alpha: 0.15)),
+              child: const Text('会员', style: TextStyle(color: AppColors.accent, fontSize: 10, fontWeight: FontWeight.w600)),
+            ),
+        ]),
         subtitle: Text(m.durationText, style: const TextStyle(fontSize: 13)),
-        onTap: () => Navigator.pushNamed(context, AppRouter.meditationPlayer, arguments: m),
+        onTap: () {
+          if (m.isPremium && !HiveService.isPremium) {
+            _showPremiumDialog(context, m.title);
+            return;
+          }
+          Navigator.pushNamed(context, AppRouter.meditationPlayer, arguments: m);
+        },
+      ),
+    );
+  }
+
+  void _showPremiumDialog(BuildContext context, String title) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Row(children: [
+          Icon(Icons.lock, color: AppColors.accent),
+          SizedBox(width: 8),
+          Text('会员专属'),
+        ]),
+        content: Text('「$title」是高级会员内容。\n\n升级会员即可畅享全部睡前故事与冥想课程。'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('以后再说')),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              Navigator.pushNamed(context, AppRouter.subscription);
+            },
+            child: const Text('升级会员'),
+          ),
+        ],
       ),
     );
   }

@@ -8,6 +8,7 @@ import "features/meditation/providers/meditation_provider.dart";
 import "features/breathing/providers/breathing_provider.dart";
 import "features/home/providers/home_provider.dart";
 import "features/profile/providers/profile_provider.dart";
+import "features/auth/providers/auth_provider.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => MeditationProvider()),
         ChangeNotifierProvider(create: (_) => BreathingProvider()),
         ChangeNotifierProvider(create: (_) => HomeProvider()),

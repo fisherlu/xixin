@@ -82,6 +82,37 @@ class HiveService {
   }
 }
 
+  // ── Auth ──
+  static bool get isLoggedIn => _settingsBox.get('loggedIn', defaultValue: false);
+  static set isLoggedIn(bool v) => _settingsBox.put('loggedIn', v);
+
+  static String get userName => _settingsBox.get('userName', defaultValue: '');
+  static set userName(String v) => _settingsBox.put('userName', v);
+
+  static String get userEmail => _settingsBox.get('userEmail', defaultValue: '');
+  static set userEmail(String v) => _settingsBox.put('userEmail', v);
+
+  static String get userPhone => _settingsBox.get('userPhone', defaultValue: '');
+  static set userPhone(String v) => _settingsBox.put('userPhone', v);
+
+  // ── Premium ──
+  static bool get isPremium => _settingsBox.get('isPremium', defaultValue: false);
+  static set isPremium(bool v) => _settingsBox.put('isPremium', v);
+
+  static String get premiumExpiry => _settingsBox.get('premiumExpiry', defaultValue: '');
+  static set premiumExpiry(String v) => _settingsBox.put('premiumExpiry', v);
+
+  static int get trialDaysLeft {
+    final start = _settingsBox.get('trialStart', defaultValue: '');
+    if (start == '') return 0;
+    final elapsed = DateTime.now().difference(DateTime.parse(start)).inDays;
+    return (7 - elapsed).clamp(0, 7);
+  }
+
+  static void startTrial() {
+    _settingsBox.put('trialStart', DateTime.now().toIso8601String());
+  }
+
   // ── Onboarding ──
   static bool get onboardingDone => _settingsBox.get("onboardingDone", defaultValue: false);
   static set onboardingDone(bool v) => _settingsBox.put("onboardingDone", v);

@@ -1,37 +1,41 @@
 import "package:flutter/material.dart";
+import "package:provider/provider.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
 import "core/theme/app_theme.dart";
 import "core/router/app_router.dart";
 import "core/storage/hive_service.dart";
 import "features/onboarding/onboarding_page.dart";
+import "features/auth/login_page.dart";
+import "features/auth/providers/auth_provider.dart";
 
-class XixinApp extends StatefulWidget {
+class XixinApp extends StatelessWidget {
   const XixinApp({super.key});
-
-  @override State<XixinApp> createState() => _XixinAppState();
-}
-
-class _XixinAppState extends State<XixinApp> {
-  bool _showOnboarding = false;
-
-  @override void initState() {
-    super.initState();
-    _showOnboarding = !HiveService.onboardingDone;
-  }
-
-  void _completeOnboarding() {
-    HiveService.onboardingDone = true;
-    setState(() => _showOnboarding = false);
-  }
 
   @override
   Widget build(BuildContext context) {
-    if (_showOnboarding) {
+    final auth = context.watch<AuthProvider>();
+    final showOnboarding = !HiveService.onboardingDone;
+    final showLogin = !auth.isLoggedIn && !showOnboarding;
+
+    if (showOnboarding) {
       return MaterialApp(
         title: "息心",
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
-        home: OnboardingPage(onComplete: _completeOnboarding),
+        home: OnboardingPage(onComplete: () {
+          HiveService.onboardingDone = true;
+          // Force rebuild by notifying auth
+          context.read<AuthProvider>().notifyListeners();
+        }),
+      );
+    }
+
+    if (showLogin) {
+      return MaterialApp(
+        title: "息心",
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        home: const LoginPage(),
       );
     }
 

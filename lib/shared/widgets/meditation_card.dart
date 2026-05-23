@@ -1,5 +1,7 @@
-﻿import "package:flutter/material.dart";
+import "package:flutter/material.dart";
 import "../../core/theme/app_colors.dart";
+import "../../core/storage/hive_service.dart";
+import "../../core/router/app_router.dart";
 import "../models/meditation.dart";
 
 class MeditationCard extends StatelessWidget {
@@ -16,7 +18,13 @@ class MeditationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        if (meditation.isPremium && !HiveService.isPremium) {
+          _showPremiumDialog(context);
+          return;
+        }
+        onTap();
+      },
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(20),
@@ -53,18 +61,28 @@ class MeditationCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    meditation.title,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
+                  Row(children: [
+                    Expanded(
+                      child: Text(
+                        meditation.title,
+                        style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                      ),
                     ),
-                  ),
+                    if (meditation.isPremium)
+                      Container(
+                        margin: const EdgeInsets.only(left: 6),
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: AppColors.accent.withValues(alpha: 0.15),
+                        ),
+                        child: const Text('会员', style: TextStyle(color: AppColors.accent, fontSize: 10, fontWeight: FontWeight.w600)),
+                      ),
+                  ]),
                   const SizedBox(height: 4),
                   Text(
                     meditation.description,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
+                    style: theme.textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -87,6 +105,30 @@ class MeditationCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showPremiumDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Row(children: [
+          Icon(Icons.lock, color: AppColors.accent),
+          SizedBox(width: 8),
+          Text('会员专属'),
+        ]),
+        content: Text('「${meditation.title}」是高级会员内容。\n\n升级会员即可畅享全部冥想课程与睡眠故事。'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('以后再说')),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              Navigator.pushNamed(context, AppRouter.subscription);
+            },
+            child: const Text('升级会员'),
+          ),
+        ],
       ),
     );
   }
