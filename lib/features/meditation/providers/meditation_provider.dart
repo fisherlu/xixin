@@ -68,6 +68,13 @@ class MeditationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> seekRelative(int seconds) async {
+    final newPos = (_progress + seconds).clamp(0.0, durationSeconds);
+    await _audio.seek(Duration(seconds: newPos.toInt()));
+    _progress = newPos;
+    notifyListeners();
+  }
+
   Future<void> stop() async {
     await _audio.stop();
     _current = null;

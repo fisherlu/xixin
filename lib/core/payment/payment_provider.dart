@@ -1,10 +1,12 @@
 import "package:flutter/foundation.dart";
+import "dart:io" show Platform;
 import "payment_service.dart";
 import "payment_product.dart";
 import "payment_result.dart";
 import "payment_factory.dart";
 import "receipt_validator.dart";
 import "../../storage/hive_service.dart";
+import "../../network/api_service.dart";
 
 enum PaymentState { idle, loading, purchasing, success, error, restoring }
 
@@ -35,7 +37,12 @@ class PaymentProvider extends ChangeNotifier {
     }
   }
 
-  /// 发起购买
+  String get _platformLabel {
+    if (Platform.isIOS) return 'apple';
+    if (Platform.isAndroid) return 'google';
+    return 'google';
+  }
+
   Future<bool> purchase(PaymentProduct product) async {
     _setState(PaymentState.purchasing);
     _errorMessage = null;
@@ -44,10 +51,11 @@ class PaymentProvider extends ChangeNotifier {
       final result = await _service.purchase(product);
 
       if (result.success) {
-        // 验证收据
         final valid = await ReceiptValidator.validate(result);
         if (valid) {
           _activatePremium(product, result);
+          // Sync to backend server
+          await _syncToServer(product, result);
           _setState(PaymentState.success);
           return true;
         } else {
@@ -67,30 +75,57 @@ class PaymentProvider extends ChangeNotifier {
     }
   }
 
-  /// 恢复购买
+  Future<void> _syncToServer(PaymentProduct product, PurchaseResult result) async {
+    try {
+      await ApiService.activateSubscription(
+        planId: product.id,
+        planName: product.title,
+        platform: _platformLabel,
+        transactionId: result.transactionId ?? '',
+        receiptData: result.receiptData,
+        expiresAt: HiveService.premiumExpiry,
+      );
+      debugPrint('[Payment] Server sync success: ${product.id}');
+    } catch (e) {
+      debugPrint('[Payment] Server sync failed (offline?): $e');
+      // Server sync is best-effort; local activation already done
+    }
+  }
+
   Future<bool> restore() async {
     _setState(PaymentState.restoring);
     _errorMessage = null;
 
     try {
+      // First try server-side restore
+      try {
+        final serverStatus = await ApiService.getSubscriptionStatus();
+        if (serverStatus["is_premium"] == true) {
+          HiveService.isPremium = true;
+          if (serverStatus["subscription"]?["expires_at"] != null) {
+            HiveService.premiumExpiry = serverStatus["subscription"]["expires_at"];
+          }
+          _setState(PaymentState.success);
+          return true;
+        }
+      } catch (_) {}
+
+      // Fallback to platform restore
       final result = await _service.restorePurchases();
       if (result.success) {
-        // 检查有效的订阅
         final active = await _service.hasActiveSubscription();
         if (active) {
           HiveService.isPremium = true;
           _setState(PaymentState.success);
           return true;
-        } else {
-          _errorMessage = '未找到有效订阅';
-          _setState(PaymentState.idle);
-          return false;
         }
-      } else {
-        _errorMessage = result.errorMessage ?? '恢复失败';
+        _errorMessage = '未找到有效订阅';
         _setState(PaymentState.idle);
         return false;
       }
+      _errorMessage = result.errorMessage ?? '恢复失败';
+      _setState(PaymentState.idle);
+      return false;
     } catch (e) {
       _errorMessage = '恢复异常: $e';
       _setState(PaymentState.idle);
@@ -98,34 +133,21 @@ class PaymentProvider extends ChangeNotifier {
     }
   }
 
-  /// 激活会员
   void _activatePremium(PaymentProduct product, PurchaseResult result) {
     HiveService.isPremium = true;
     final duration = product.period == SubscriptionPeriod.monthly
         ? const Duration(days: 30)
         : product.period == SubscriptionPeriod.yearly
             ? const Duration(days: 365)
-            : const Duration(days: 36500); // 终身
+            : const Duration(days: 36500);
 
     HiveService.premiumExpiry = DateTime.now().add(duration).toIso8601String();
     HiveService.lastTransactionId = result.transactionId ?? '';
-    debugPrint('[Premium] Activated: ${product.title} until ${HiveService.premiumExpiry}');
+    debugPrint('[Premium] Activated: ${product.title}');
   }
 
-  void reset() {
-    _state = PaymentState.idle;
-    _errorMessage = null;
-    notifyListeners();
-  }
+  void reset() { _state = PaymentState.idle; _errorMessage = null; notifyListeners(); }
+  void _setState(PaymentState s) { _state = s; notifyListeners(); }
 
-  void _setState(PaymentState s) {
-    _state = s;
-    notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    _service.dispose();
-    super.dispose();
-  }
+  @override void dispose() { _service.dispose(); super.dispose(); }
 }

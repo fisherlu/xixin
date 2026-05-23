@@ -155,7 +155,7 @@ class _MeditationPlayerPageState extends State<MeditationPlayerPage> {
   Widget _controls(ThemeData theme, MeditationProvider p) {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       const SizedBox(width: 48),
-      IconButton(icon: const Icon(Icons.replay_10, color: Colors.white70, size: 32), onPressed: () {}),
+      IconButton(icon: const Icon(Icons.replay_10, color: Colors.white70, size: 32), onPressed: () => context.read<MeditationProvider>().seekRelative(-10)),
       const SizedBox(width: 32),
       GestureDetector(
         onTap: p.pauseResume,
@@ -166,7 +166,7 @@ class _MeditationPlayerPageState extends State<MeditationPlayerPage> {
         ),
       ),
       const SizedBox(width: 32),
-      IconButton(icon: const Icon(Icons.forward_10, color: Colors.white70, size: 32), onPressed: () {}),
+      IconButton(icon: const Icon(Icons.forward_10, color: Colors.white70, size: 32), onPressed: () => context.read<MeditationProvider>().seekRelative(10)),
       const SizedBox(width: 48),
     ]);
   }
@@ -176,6 +176,8 @@ class _MeditationPlayerPageState extends State<MeditationPlayerPage> {
       {'id': 'rain', 'label': '雨声', 'asset': 'assets/audio/ambient/rain.mp3'},
       {'id': 'forest', 'label': '森林', 'asset': 'assets/audio/ambient/forest.mp3'},
       {'id': 'wave', 'label': '浪潮', 'asset': 'assets/audio/ambient/wave.mp3'},
+      {'id': 'fireplace', 'label': '壁炉', 'asset': 'assets/audio/ambient/fireplace.mp3'},
+      {'id': 'bell', 'label': '钟声', 'asset': 'assets/audio/ambient/bell.mp3'},
       {'id': 'none', 'label': '无', 'asset': ''},
     ];
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: ambients.map((a) {

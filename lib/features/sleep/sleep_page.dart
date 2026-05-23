@@ -125,17 +125,24 @@ class SleepPage extends StatelessWidget {
 
   Widget _ambientGrid(BuildContext context) {
     final sounds = [
-      {"icon": Icons.water_drop, "label": "雨声"},
-      {"icon": Icons.forest, "label": "森林"},
-      {"icon": Icons.waves, "label": "浪潮"},
-      {"icon": Icons.fireplace, "label": "壁炉"},
-      {"icon": Icons.temple_buddhist, "label": "钟声"},
+      {"id": "rain", "icon": Icons.water_drop, "label": "雨声"},
+      {"id": "forest", "icon": Icons.forest, "label": "森林"},
+      {"id": "wave", "icon": Icons.waves, "label": "浪潮"},
+      {"id": "fireplace", "icon": Icons.fireplace, "label": "壁炉"},
+      {"id": "bell", "icon": Icons.temple_buddhist, "label": "钟声"},
     ];
     return Wrap(
       spacing: 12, runSpacing: 12,
       children: sounds.map((s) {
         return GestureDetector(
-          onTap: () {},
+          onTap: () {
+          final id = s["id"] as String;
+          if (id == "rain") { /* play rain ambient */ }
+          if (id == "forest") { /* play forest ambient */ }
+          if (id == "wave") { /* play wave ambient */ }
+          if (id == "fireplace") { /* play fireplace */ }
+          if (id == "bell") { /* play bell */ }
+        },
           child: Container(
             width: 100, height: 100,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Theme.of(context).cardColor),

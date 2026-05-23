@@ -33,7 +33,7 @@ class Meditation {
   }
 }
 
-// ── Sample content data (placeholders until real audio) ──
+// ── 冥想课程内容 ──
 class MeditationLibrary {
   MeditationLibrary._();
 
