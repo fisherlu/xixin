@@ -1,0 +1,142 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1B4332"/>
+      <stop offset="50%" stop-color="#2D6A4F"/>
+      <stop offset="100%" stop-color="#40916C"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="230" fill="url(#bg)"/>
+
+  <!-- Subtle glow behind figure -->
+  <circle cx="512" cy="440" r="280" fill="url(#glow)"/>
+
+  <!-- === LOTUS MEDITATION SILHOUETTE === -->
+  <g fill="#ffffff" opacity="0.85">
+    <!-- Head -->
+    <circle cx="512" cy="220" r="42"/>
+
+    <!-- Neck -->
+    <path d="M 492,258 Q 512,272 532,258 L 526,280 Q 512,292 498,280 Z"/>
+
+    <!-- Torso - natural curves, wider at shoulders, tapering at waist -->
+    <path d="
+      M 458,300
+      C 445,340 440,390 448,420
+      C 454,440 470,450 492,450
+      C 502,450 510,445 512,440
+      C 514,445 522,450 532,450
+      C 554,450 570,440 576,420
+      C 584,390 579,340 566,300
+      C 556,282 544,275 532,272
+      C 520,270 504,270 492,272
+      C 480,275 468,282 458,300
+      Z
+    "/>
+
+    <!-- Left thigh - wide lotus, knee out -->
+    <path d="
+      M 448,420
+      C 435,435 410,460 380,480
+      C 360,494 345,500 350,490
+      C 355,478 375,455 400,440
+      C 420,428 440,418 448,420
+      Z
+    "/>
+
+    <!-- Right thigh - wide lotus, knee out -->
+    <path d="
+      M 576,420
+      C 589,435 614,460 644,480
+      C 664,494 679,500 674,490
+      C 669,478 649,455 624,440
+      C 604,428 584,418 576,420
+      Z
+    "/>
+
+    <!-- Left lower leg + foot (on right thigh) -->
+    <path d="
+      M 355,488
+      C 370,475 400,455 440,442
+      C 460,438 480,442 495,450
+      C 500,454 498,458 490,456
+      C 470,450 445,448 425,455
+      C 400,462 378,478 355,488
+      Z
+    "/>
+
+    <!-- Right lower leg + foot (on left thigh) -->
+    <path d="
+      M 669,488
+      C 654,475 624,455 584,442
+      C 564,438 544,442 529,450
+      C 524,454 526,458 534,456
+      C 554,450 579,448 599,455
+      C 624,462 646,478 669,488
+      Z
+    "/>
+
+    <!-- Left arm - gracefully curved, hand in mudra on knee -->
+    <path d="
+      M 460,310
+      C 445,335 425,375 408,415
+      C 400,438 395,455 398,460
+      C 402,466 410,465 415,455
+      C 422,440 428,425 435,415
+      C 442,402 448,392 450,388
+    "/>
+
+    <!-- Right arm - gracefully curved, hand in mudra on knee -->
+    <path d="
+      M 564,310
+      C 579,335 599,375 616,415
+      C 624,438 629,455 626,460
+      C 622,466 614,465 609,455
+      C 602,440 596,425 589,415
+      C 582,402 576,392 574,388
+    "/>
+  </g>
+
+  <!-- Subtle outline for definition -->
+  <g fill="none" stroke="#B7E4C7" stroke-width="1.5" opacity="0.6">
+    <circle cx="512" cy="220" r="42"/>
+  </g>
+
+  <!-- === Decorative elements === -->
+  <g fill="#95D5B2" opacity="0.45">
+    <ellipse cx="230" cy="180" rx="18" ry="9" transform="rotate(-40 230 180)"/>
+    <ellipse cx="790" cy="200" rx="16" ry="8" transform="rotate(30 790 200)"/>
+    <ellipse cx="270" cy="700" rx="14" ry="7" transform="rotate(-25 270 700)"/>
+    <ellipse cx="750" cy="680" rx="17" ry="8" transform="rotate(35 750 680)"/>
+    <ellipse cx="175" cy="480" rx="12" ry="6" transform="rotate(-50 175 480)"/>
+    <ellipse cx="845" cy="500" rx="13" ry="6" transform="rotate(20 845 500)"/>
+  </g>
+
+  <!-- Ripple lines -->
+  <g fill="none" stroke="#B7E4C7" stroke-width="3" opacity="0.35">
+    <path d="M 190,560 C 235,520 275,520 305,560 C 335,600 375,600 415,560"/>
+    <path d="M 605,480 C 650,440 690,440 720,480 C 750,520 790,520 830,480"/>
+  </g>
+
+  <!-- Water drop -->
+  <path d="M 512,710 C 468,755 468,795 480,815 C 492,835 512,845 512,850 C 512,845 532,835 544,815 C 556,795 556,755 512,710 Z" fill="#95D5B2" opacity="0.28"/>
+
+  <!-- Inner border -->
+  <rect x="24" y="24" width="976" height="976" rx="210" fill="none" stroke="#B7E4C7" stroke-width="3" opacity="0.2"/>
+
+  <!-- Light dots -->
+  <g fill="#ffffff" opacity="0.35">
+    <circle cx="155" cy="260" r="4"/>
+    <circle cx="870" cy="330" r="5"/>
+    <circle cx="205" cy="640" r="3.5"/>
+    <circle cx="820" cy="610" r="4"/>
+    <circle cx="125" cy="420" r="3"/>
+    <circle cx="895" cy="450" r="4.5"/>
+  </g>
+</svg>

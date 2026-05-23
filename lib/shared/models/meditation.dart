@@ -1,4 +1,4 @@
-enum MeditationCategory { focus, stress, sleep, morning, compassion, body }
+﻿enum MeditationCategory { focus, stress, sleep, morning, compassion, body }
 
 class Meditation {
   final String id;
@@ -27,7 +27,7 @@ class Meditation {
     if (durationMinutes < 60) return "$durationMinutes分钟";
     final h = durationMinutes ~/ 60;
     final m = durationMinutes % 60;
-    return m == 0 ? "${h}小时" : "${h}小时${m}分钟";
+    return m == 0 ? "$h小时" : "$h小时$m分钟";
   }
 }
 

@@ -1,7 +1,5 @@
 import "package:just_audio/just_audio.dart";
 
-enum AudioType { meditation, sleepStory, ambient, breathing }
-
 class AudioService {
   final AudioPlayer _player = AudioPlayer();
   final AudioPlayer _ambientPlayer = AudioPlayer();

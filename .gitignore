@@ -5,6 +5,9 @@ build/
 *.iml
 .idea/
 .vscode/
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
 *.lock
 *.g.dart
 *.freezed.dart

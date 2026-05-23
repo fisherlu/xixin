@@ -1,3 +1,4 @@
+import 'package:just_audio/just_audio.dart';
 import "package:flutter/foundation.dart";
 import "../../../core/audio/audio_service.dart";
 import "../../../core/storage/hive_service.dart";
@@ -97,7 +98,7 @@ class MeditationProvider extends ChangeNotifier {
     final totalMin = HiveService.totalMinutes;
     final streak = HiveService.streakDays;
 
-    if (sessions.length >= 1 && !HiveService.hasAchievement("first_session")) {
+    if (sessions.isNotEmpty && !HiveService.hasAchievement("first_session")) {
       await HiveService.unlockAchievement("first_session");
     }
     if (streak >= 3 && !HiveService.hasAchievement("streak_3")) {
@@ -114,3 +115,6 @@ class MeditationProvider extends ChangeNotifier {
     }
   }
 }
+
+
+

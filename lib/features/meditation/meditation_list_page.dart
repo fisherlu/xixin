@@ -1,5 +1,4 @@
-import "package:flutter/material.dart";
-import "../../core/theme/app_colors.dart";
+﻿import "package:flutter/material.dart";
 import "../../shared/models/meditation.dart";
 import "../../shared/widgets/meditation_card.dart";
 import "../../core/router/app_router.dart";

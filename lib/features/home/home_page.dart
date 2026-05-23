@@ -1,4 +1,4 @@
-import "package:flutter/material.dart";
+﻿import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import "../../core/router/app_router.dart";
 import "../../core/theme/app_colors.dart";
@@ -60,7 +60,7 @@ class HomePage extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           gradient: const LinearGradient(colors: AppColors.gradientBreathing),
-          boxShadow: [BoxShadow(color: AppColors.primary.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 8))],
+          boxShadow: [BoxShadow(color: AppColors.primary.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, 8))],
         ),
         child: const Column(children: [
           Icon(Icons.air, color: Colors.white, size: 36),

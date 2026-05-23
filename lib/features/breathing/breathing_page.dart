@@ -1,4 +1,4 @@
-import "dart:math";
+﻿import "dart:math";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import "../../core/theme/app_colors.dart";
@@ -32,7 +32,7 @@ class BreathingPage extends StatelessWidget {
             contentPadding: const EdgeInsets.all(20),
             leading: Container(
               width: 48, height: 48,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: AppColors.primary.withOpacity(0.1)),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: AppColors.primary.withValues(alpha: 0.1)),
               child: const Icon(Icons.air, color: AppColors.primary),
             ),
             title: Text(p.title, style: const TextStyle(fontWeight: FontWeight.w600)),
@@ -48,7 +48,6 @@ class BreathingPage extends StatelessWidget {
   }
 
   Widget _breathingSession(BuildContext context, BreathingProvider bp, BreathingPattern p, ThemeData theme) {
-    final phase = bp.phase;
     final animSize = bp.isRunning ? 120.0 + sin(bp.phaseSecondsLeft * 0.5) * 40 : 120.0;
     
     return Column(
@@ -60,8 +59,8 @@ class BreathingPage extends StatelessWidget {
           width: animSize, height: animSize,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: LinearGradient(colors: AppColors.gradientBreathing),
-            boxShadow: [BoxShadow(color: AppColors.primary.withOpacity(0.2), blurRadius: 30, spreadRadius: 5)],
+            gradient: const LinearGradient(colors: AppColors.gradientBreathing),
+            boxShadow: [BoxShadow(color: AppColors.primary.withValues(alpha: 0.2), blurRadius: 30, spreadRadius: 5)],
           ),
         ),
         const SizedBox(height: 40),

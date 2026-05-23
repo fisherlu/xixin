@@ -1,4 +1,4 @@
-class BreathingPattern {
+﻿class BreathingPattern {
   final String id;
   final String title;
   final String description;
@@ -22,7 +22,7 @@ class BreathingPattern {
     if (p.length == 4) {
       return "吸${p[0]}s · 屏${p[1]}s · 呼${p[2]}s · 屏${p[3]}s";
     }
-    return holdPatterns.join("s · ") + "s";
+    return "${holdPatterns.join("s · ")}s";
   }
 }
 

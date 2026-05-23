@@ -1,4 +1,4 @@
-import "dart:async";
+﻿import "dart:async";
 import "package:flutter/foundation.dart";
 import "../../../shared/models/breathing_pattern.dart";
 
@@ -55,10 +55,10 @@ class BreathingProvider extends ChangeNotifier {
     final p = _pattern!.holdPatterns;
     if (phaseIdx >= p.length) { _runCycle(); return; }
     _phaseSecondsLeft = p[phaseIdx];
-    if (phaseIdx == 0) _phase = BreathingPhase.inhale;
-    else if (phaseIdx == 1) _phase = BreathingPhase.holdAfterInhale;
-    else if (phaseIdx == 2) _phase = BreathingPhase.exhale;
-    else _phase = BreathingPhase.holdAfterExhale;
+    if (phaseIdx == 0) { _phase = BreathingPhase.inhale; }
+    else if (phaseIdx == 1) { _phase = BreathingPhase.holdAfterInhale; }
+    else if (phaseIdx == 2) { _phase = BreathingPhase.exhale; }
+    else { _phase = BreathingPhase.holdAfterExhale; }
     notifyListeners();
     _timer = Timer.periodic(const Duration(seconds: 1), (t) {
       _phaseSecondsLeft--;

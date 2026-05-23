@@ -1,4 +1,4 @@
-import "package:flutter/material.dart";
+﻿import "package:flutter/material.dart";
 import "../../core/router/app_router.dart";
 import "../../core/theme/app_colors.dart";
 import "../../shared/models/sleep_story.dart";
@@ -58,7 +58,7 @@ class SleepPage extends StatelessWidget {
         contentPadding: const EdgeInsets.all(16),
         leading: Container(
           width: 48, height: 48,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: AppColors.primary.withOpacity(0.1)),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: AppColors.primary.withValues(alpha: 0.1)),
           child: const Icon(Icons.self_improvement, color: AppColors.primary),
         ),
         title: Text(m.title, style: const TextStyle(fontWeight: FontWeight.w600)),
