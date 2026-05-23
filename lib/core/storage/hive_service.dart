@@ -100,6 +100,9 @@ class HiveService {
   static set isPremium(bool v) => _settingsBox.put('isPremium', v);
 
   static String get premiumExpiry => _settingsBox.get('premiumExpiry', defaultValue: '');
+  static String get lastTransactionId => _settingsBox.get('lastTxnId', defaultValue: '');
+  static set lastTransactionId(String v) => _settingsBox.put('lastTxnId', v);
+
   static set premiumExpiry(String v) => _settingsBox.put('premiumExpiry', v);
 
   static int get trialDaysLeft {
