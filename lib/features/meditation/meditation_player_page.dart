@@ -10,6 +10,9 @@ class MeditationPlayerPage extends StatefulWidget {
 }
 
 class _MeditationPlayerPageState extends State<MeditationPlayerPage> {
+  String _scriptText = '';
+  bool _showScript = false;
+
   @override Widget build(BuildContext context) {
     final p = context.watch<MeditationProvider>();
     final m = p.current;
@@ -24,18 +27,82 @@ class _MeditationPlayerPageState extends State<MeditationPlayerPage> {
         ),
         child: SafeArea(child: Column(children: [
           _appBar(context),
-          const Spacer(),
-          _titleSection(theme, m),
-          const SizedBox(height: 48),
-          _progressSection(theme, p, progress),
-          const SizedBox(height: 48),
-          _controls(theme, p),
-          const SizedBox(height: 24),
-          _ambientSelector(theme, p),
-          const Spacer(),
+          Expanded(
+            child: _showScript && _scriptText.isNotEmpty
+                ? _scriptView(theme)
+                : _playerView(theme, m, p, progress),
+          ),
         ])),
       ),
     );
+  }
+
+  Widget _playerView(ThemeData theme, Meditation m, MeditationProvider p, double progress) {
+    return Column(children: [
+      const Spacer(),
+      _titleSection(theme, m),
+      const SizedBox(height: 48),
+      _progressSection(theme, p, progress),
+      const SizedBox(height: 48),
+      _controls(theme, p),
+      const SizedBox(height: 24),
+      _ambientSelector(theme, p),
+      const SizedBox(height: 16),
+      _scriptToggle(theme),
+      const Spacer(),
+    ]);
+  }
+
+  Widget _scriptView(ThemeData theme) {
+    return Column(children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(children: [
+          _scriptToggle(theme),
+          const Spacer(),
+        ]),
+      ),
+      Expanded(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
+          child: Text(
+            _scriptText,
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: Colors.white,
+              height: 1.8,
+            ),
+          ),
+        ),
+      ),
+    ]);
+  }
+
+  Widget _scriptToggle(ThemeData theme) {
+    return TextButton.icon(
+      onPressed: () async {
+        if (!_showScript) {
+          await _loadScript();
+        }
+        setState(() => _showScript = !_showScript);
+      },
+      icon: Icon(_showScript ? Icons.headphones : Icons.article, color: Colors.white54, size: 18),
+      label: Text(
+        _showScript ? '返回播放' : '查看引导词',
+        style: theme.textTheme.bodySmall?.copyWith(color: Colors.white54),
+      ),
+    );
+  }
+
+  Future<void> _loadScript() async {
+    final m = context.read<MeditationProvider>().current;
+    if (m?.scriptAsset == null) return;
+    try {
+      _scriptText = await DefaultAssetBundle.of(context).loadString(m!.scriptAsset!);
+      setState(() {});
+    } catch (_) {
+      _scriptText = '(暂无引导词)';
+      setState(() {});
+    }
   }
 
   Widget _appBar(BuildContext context) {
@@ -80,7 +147,7 @@ class _MeditationPlayerPageState extends State<MeditationPlayerPage> {
           ),
         ),
         const SizedBox(height: 12),
-        Text('${((p.durationSeconds - p.progress) / 60).ceil()} 分钟', style: theme.textTheme.bodySmall?.copyWith(color: Colors.white54)),
+        Text(' 分钟', style: theme.textTheme.bodySmall?.copyWith(color: Colors.white54)),
       ]),
     );
   }

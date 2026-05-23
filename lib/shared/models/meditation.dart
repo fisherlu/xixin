@@ -1,4 +1,4 @@
-﻿enum MeditationCategory { focus, stress, sleep, morning, compassion, body }
+enum MeditationCategory { focus, stress, sleep, morning, compassion, body }
 
 class Meditation {
   final String id;
@@ -10,6 +10,7 @@ class Meditation {
   final String? narrator;
   final String? imageAsset;
   final bool isPremium;
+  final String? scriptAsset;
 
   const Meditation({
     required this.id,
@@ -21,13 +22,14 @@ class Meditation {
     this.narrator,
     this.imageAsset,
     this.isPremium = false,
+    this.scriptAsset,
   });
 
   String get durationText {
-    if (durationMinutes < 60) return "$durationMinutes分钟";
+    if (durationMinutes < 60) return "";
     final h = durationMinutes ~/ 60;
     final m = durationMinutes % 60;
-    return m == 0 ? "$h小时" : "$h小时$m分钟";
+    return m == 0 ? "" : "";
   }
 }
 
@@ -44,6 +46,7 @@ class MeditationLibrary {
       durationMinutes: 10,
       category: MeditationCategory.morning,
       narrator: "林静",
+      scriptAsset: "assets/scripts/01_morning_wake.md",
     ),
     Meditation(
       id: "sleep_relax",
@@ -53,6 +56,7 @@ class MeditationLibrary {
       durationMinutes: 15,
       category: MeditationCategory.sleep,
       narrator: "林静",
+      scriptAsset: "assets/scripts/02_sleep_relax.md",
     ),
     Meditation(
       id: "body_scan",
@@ -63,6 +67,7 @@ class MeditationLibrary {
       category: MeditationCategory.body,
       narrator: "林静",
       isPremium: true,
+      scriptAsset: "assets/scripts/03_body_scan.md",
     ),
     Meditation(
       id: "focus_breath",
@@ -72,6 +77,7 @@ class MeditationLibrary {
       durationMinutes: 10,
       category: MeditationCategory.focus,
       narrator: "林静",
+      scriptAsset: "assets/scripts/04_focus.md",
     ),
     Meditation(
       id: "compassion",
@@ -82,6 +88,7 @@ class MeditationLibrary {
       category: MeditationCategory.compassion,
       narrator: "林静",
       isPremium: true,
+      scriptAsset: "assets/scripts/08_compassion.md",
     ),
     Meditation(
       id: "anxiety_relief",
@@ -91,6 +98,7 @@ class MeditationLibrary {
       durationMinutes: 15,
       category: MeditationCategory.stress,
       narrator: "林静",
+      scriptAsset: "assets/scripts/05_anxiety_relief.md",
     ),
     Meditation(
       id: "lunch_break",
@@ -99,6 +107,7 @@ class MeditationLibrary {
       audioAsset: "assets/audio/meditations/lunch_break.mp3",
       durationMinutes: 10,
       category: MeditationCategory.stress,
+      scriptAsset: "assets/scripts/06_lunch_break.md",
     ),
     Meditation(
       id: "breath_awareness",
@@ -107,6 +116,7 @@ class MeditationLibrary {
       audioAsset: "assets/audio/meditations/breath_awareness.mp3",
       durationMinutes: 15,
       category: MeditationCategory.focus,
+      scriptAsset: "assets/scripts/07_breath_awareness.md",
     ),
     Meditation(
       id: "gratitude",
@@ -116,6 +126,7 @@ class MeditationLibrary {
       durationMinutes: 10,
       category: MeditationCategory.compassion,
       isPremium: true,
+      scriptAsset: "assets/scripts/09_gratitude.md",
     ),
     Meditation(
       id: "deep_relax",
@@ -126,6 +137,7 @@ class MeditationLibrary {
       category: MeditationCategory.sleep,
       narrator: "林静",
       isPremium: true,
+      scriptAsset: "assets/scripts/10_deep_relax.md",
     ),
   ];
 }

@@ -7,6 +7,7 @@ class SleepStory {
   final String? narrator;
   final String? imageAsset;
   final bool isPremium;
+  final String? scriptAsset;
 
   const SleepStory({
     required this.id,
@@ -17,9 +18,10 @@ class SleepStory {
     this.narrator,
     this.imageAsset,
     this.isPremium = false,
+    this.scriptAsset,
   });
 
-  String get durationText => "$durationMinutes分钟";
+  String get durationText => "";
 }
 
 class SleepStoryLibrary {
@@ -33,6 +35,7 @@ class SleepStoryLibrary {
       audioAsset: "assets/audio/sleep_stories/forest_cabin.mp3",
       durationMinutes: 20,
       narrator: "林静",
+      scriptAsset: "assets/scripts/sleep_01_forest_cabin.md",
     ),
     SleepStory(
       id: "ocean_sunset",
@@ -41,6 +44,7 @@ class SleepStoryLibrary {
       audioAsset: "assets/audio/sleep_stories/ocean_sunset.mp3",
       durationMinutes: 20,
       isPremium: true,
+      scriptAsset: "assets/scripts/sleep_02_ocean_sunset.md",
     ),
     SleepStory(
       id: "starry_night",
@@ -49,6 +53,7 @@ class SleepStoryLibrary {
       audioAsset: "assets/audio/sleep_stories/starry_night.mp3",
       durationMinutes: 20,
       isPremium: true,
+      scriptAsset: "assets/scripts/sleep_03_starry_night.md",
     ),
     SleepStory(
       id: "jiangnan_rain",
@@ -57,6 +62,7 @@ class SleepStoryLibrary {
       audioAsset: "assets/audio/sleep_stories/jiangnan_rain.mp3",
       durationMinutes: 20,
       narrator: "林静",
+      scriptAsset: "assets/scripts/sleep_04_jiangnan_rain.md",
     ),
     SleepStory(
       id: "snow_mountain",
@@ -65,6 +71,7 @@ class SleepStoryLibrary {
       audioAsset: "assets/audio/sleep_stories/snow_mountain.mp3",
       durationMinutes: 20,
       isPremium: true,
+      scriptAsset: "assets/scripts/sleep_05_snow_mountain.md",
     ),
   ];
 }

@@ -38,4 +38,5 @@ flutter:
     - assets/audio/meditations/
     - assets/audio/sleep_stories/
     - assets/audio/ambient/
+    - assets/scripts/
     - assets/fonts/
